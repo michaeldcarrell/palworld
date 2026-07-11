@@ -1,0 +1,29 @@
+services:
+  palworld:
+    env_file:
+      - .env
+    image: thijsvanloef/palworld-server-docker:latest
+    container_name: palworld
+    restart: unless-stopped
+    ports:
+      - "8211:8211/udp"   # game port
+      - "27015:27015/udp" # query port (optional)
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - PORT=8211
+      - PLAYERS=8
+      - MULTITHREADING=true
+      - RCON_ENABLED=true
+      - RCON_PORT=25575
+      - TZ=America/New_York
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - COMMUNITY=false
+      - SERVER_NAME="MSTWBJAH Server"
+      - SERVER_PASSWORD=${SERVER_PASSWORD}
+    volumes:
+      - ./server-files:/palworld
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8211"]
+      interval: 60s
+      retries: 3
