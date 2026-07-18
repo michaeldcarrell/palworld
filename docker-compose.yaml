@@ -21,6 +21,9 @@ services:
       - COMMUNITY=false
       - SERVER_NAME="MSTWBJAH Server"
       - SERVER_PASSWORD=${SERVER_PASSWORD}
+      - REST_API_ENABLED=true
+      - AUTO_UPDATE_ENABLED=true
+      - AUTO_UPDATE_WARN_MINUTES=240
     volumes:
       - ./server-files:/palworld
     healthcheck:
