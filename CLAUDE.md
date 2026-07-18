@@ -55,6 +55,24 @@ wraps this workflow. Keys present in only one of the two files are reported
 as warnings, not auto-applied — surface these to the user rather than
 guessing.
 
+### Maintenance shutdown
+
+Don't just run `docker compose down`/`stop` directly when players might be
+online — it gives no warning and the compose service has
+`restart: unless-stopped`, so an in-game exit alone will just bounce the
+container back up. Use the `palworld-shutdown` skill
+(`.claude/skills/palworld-shutdown/`) instead:
+
+```bash
+.claude/skills/palworld-shutdown/shutdown.sh [seconds] [message]
+```
+
+It broadcasts an RCON countdown warning to online players (via the
+container's built-in `rcon-cli`, already configured — no exposed RCON port
+needed), waits for the world to save and the process to exit, then runs
+`docker compose stop palworld` explicitly so it stays down. Bring it back
+with `docker compose up -d` when maintenance is done.
+
 ### Off-site backups
 
 An external Airflow DAG (`palworld_backup_to_gcs`, in the `/home/michael/apps`
